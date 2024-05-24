@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicios de Monomios</title>
+    <style>
+        .question {
+            margin-bottom: 20px;
+        }
+        .drag-container {
+            display: flex;
+            gap: 10px;
+        }
+        .draggable {
+            width: 100px;
+            padding: 10px;
+            border: 1px solid black;
+            background-color: lightgray;
+            cursor: pointer;
+        }
+        .dropzone {
+            width: 100px;
+            height: 50px;
+            border: 2px dashed black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ejercicios de Monomios</h1>
+
+    <!-- Preguntas de selección -->
+    <div id="selection-questions">
+        <div class="question">
+            <p>1. ¿Cuál es el coeficiente del monomio 3x^2?</p>
+            <input type="radio" name="q1" value="1"> 1<br>
+            <input type="radio" name="q1" value="2"> 2<br>
+            <input type="radio" name="q1" value="3"> 3<br>
+        </div>
+        <div class="question">
+            <p>2. ¿Cuál es el grado del monomio 4x^3y^2?</p>
+            <input type="radio" name="q2" value="3"> 3<br>
+            <input type="radio" name="q2" value="5"> 5<br>
+            <input type="radio" name="q2" value="6"> 6<br>
+        </div>
+        <div class="question">
+            <p>3. ¿Cuál es el coeficiente del monomio -7x?</p>
+            <input type="radio" name="q3" value="-7"> -7<br>
+            <input type="radio" name="q3" value="7"> 7<br>
+            <input type="radio" name="q3" value="1"> 1<br>
+        </div>
+        <div class="question">
+            <p>4. ¿Cuál es el grado del monomio 5x^4y^3z?</p>
+            <input type="radio" name="q4" value="7"> 7<br>
+            <input type="radio" name="q4" value="8"> 8<br>
+            <input type="radio" name="q4" value="9"> 9<br>
+        </div>
+        <div class="question">
+            <p>5. ¿Cuál es el coeficiente del monomio 2x^2y^2z^2?</p>
+            <input type="radio" name="q5" value="2"> 2<br>
+            <input type="radio" name="q5" value="4"> 4<br>
+            <input type="radio" name="q5" value="6"> 6<br>
+        </div>
+    </div>
+
+    <!-- Preguntas de arrastrar y soltar -->
+    <div id="drag-drop-questions">
+        <div class="question">
+            <p>6. Arrastra el coeficiente correcto del monomio 3x^2:</p>
+            <div class="drag-container">
+                <div class="draggable" draggable="true" data-value="1">1</div>
+                <div class="draggable" draggable="true" data-value="2">2</div>
+                <div class="draggable" draggable="true" data-value="3">3</div>
+            </div>
+            <div class="dropzone" data-answer="3"></div>
+        </div>
+        <div class="question">
+            <p>7. Arrastra el grado correcto del monomio 4x^3y^2:</p>
+            <div class="drag-container">
+                <div class="draggable" draggable="true" data-value="3">3</div>
+                <div class="draggable" draggable="true" data-value="5">5</div>
+                <div class="draggable" draggable="true" data-value="6">6</div>
+            </div>
+            <div class="dropzone" data-answer="5"></div>
+        </div>
+        <div class="question">
+            <p>8. Arrastra el coeficiente correcto del monomio -7x:</p>
+            <div class="drag-container">
+                <div class="draggable" draggable="true" data-value="-7">-7</div>
+                <div class="draggable" draggable="true" data-value="7">7</div>
+                <div class="draggable" draggable="true" data-value="1">1</div>
+            </div>
+            <div class="dropzone" data-answer="-7"></div>
+        </div>
+        <div class="question">
+            <p>9. Arrastra el grado correcto del monomio 5x^4y^3z:</p>
+            <div class="drag-container">
+                <div class="draggable" draggable="true" data-value="7">7</div>
+                <div class="draggable" draggable="true" data-value="8">8</div>
+                <div class="draggable" draggable="true" data-value="9">9</div>
+            </div>
+            <div class="dropzone" data-answer="8"></div>
+        </div>
+        <div class="question">
+            <p>10. Arrastra el coeficiente correcto del monomio 2x^2y^2z^2:</p>
+            <div class="drag-container">
+                <div class="draggable" draggable="true" data-value="2">2</div>
+                <div class="draggable" draggable="true" data-value="4">4</div>
+                <div class="draggable" draggable="true" data-value="6">6</div>
+            </div>
+            <div class="dropzone" data-answer="2"></div>
+        </div>
+    </div>
+
+    <button onclick="verifyAnswers()">Verificar Respuestas</button>
+
+    <p id="result"></p>
+
+    <script>
+        // Drag and Drop functionality
+        const draggables = document.querySelectorAll('.draggable');
+        const dropzones = document.querySelectorAll('.dropzone');
+
+        draggables.forEach(draggable => {
+            draggable.addEventListener('dragstart', () => {
+                draggable.classList.add('dragging');
+            });
+
+            draggable.addEventListener('dragend', () => {
+                draggable.classList.remove('dragging');
+            });
+        });
+
+        dropzones.forEach(dropzone => {
+            dropzone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                const dragging = document.querySelector('.dragging');
+                dropzone.appendChild(dragging);
+            });
+        });
+
+        // Verify answers function
+        function verifyAnswers() {
+            let score = 0;
+
+            // Verify selection questions
+            const selectionAnswers = {
+                q1: '3',
+                q2: '5',
+                q3: '-7',
+                q4: '8',
+                q5: '2'
+            };
+
+            for (let [question, answer] of Object.entries(selectionAnswers)) {
+                const selected = document.querySelector(`input[name="${question}"]:checked`);
+                if (selected && selected.value === answer) {
+                    score++;
+                }
+            }
+
+            // Verify drag and drop questions
+            dropzones.forEach(dropzone => {
+                const answer = dropzone.getAttribute('data-answer');
+                const draggedItem = dropzone.querySelector('.draggable');
+                if (draggedItem && draggedItem.getAttribute('data-value') === answer) {
+                    score++;
+                }
+            });
+
+            // Display result
+            document.getElementById('result').innerText = `Tu puntuación es: ${score} / 10`;
+        }
+    </script>
+</body>
+</html>
